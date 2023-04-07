@@ -1,0 +1,20 @@
+extends layout
+
+block content
+    h1= title
+    - let results=[{gamename:"Cricket", playername: "Virat Kohli", score:100}, {gamename:"Tennis", playername: "Manika Batra", score:20},{gamename:"Badminton", playername: "Saina Nehwal", score:10},{gamename:"Throwball", playername: "Rahul", score:100},{gamename:"baseball", playername: "Munna", score:40}]
+    br
+    div.container-fliud
+        div.row
+            each item,ind in results 
+                div(class='col-sm-2' onclick=`buy(${ind})`) 
+                    p Game Name : #{item.gamename}
+                    p Player : #{item.playername}
+                    p Score : #{item.score}
+    br
+    
+    
+    script. 
+        function buy(i){
+            alert("You purchased item "+(i+1))
+        }
