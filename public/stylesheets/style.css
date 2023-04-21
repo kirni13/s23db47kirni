@@ -4,5 +4,19 @@ body {
 }
 
 a {
-  color: #00B7FF;
+  color: red;
+}
+.costumeAttr {
+  background-color: green;
+  width: 120px;
+  }
+  .costumeAttr {
+    background-color: blue;
+    width: 120px;
+    }
+h1 {
+  color: gold;
+}
+h2 {
+  color: pink;
 }

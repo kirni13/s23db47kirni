@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  h1= title  
+  if (toShow == null)  
+    h2 No instance to delete  
+  else  
+    - let gameid = toShow._id
+    - let gamename = toShow.gamename
+    - let playername = toShow.playername
+    - let score = toShow.score
+    div
+      div.row
+        div(class='gameAttr mr-3') game ID is:
+        div #{gameid}
+      div.row
+        div(class='gameAttr mr-3') game Name is:
+        div #{gamename}
+      div.row
+        div(class='gameAttr mr-3') player name is:
+        div #{playername}
+      div.row
+        div(class='gameAttr mr-3') score is:
+        div #{score}
+      

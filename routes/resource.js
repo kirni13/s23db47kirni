@@ -10,7 +10,7 @@ router.get('/', api_controller.api);
 // POST request for creating a Costume.
 router.post('/game', game_controller.game_create_post);
 // DELETE request to delete Costume.
-//router.delete('/game/:id', game_controller.game_delete);
+router.delete('/game/:id', game_controller.game_delete);
 // PUT request to update Costume.
 router.put('/game/:id', game_controller.game_update_put);
 // GET request for one Costume.

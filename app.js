@@ -10,7 +10,7 @@ var gameRouter = require('./routes/game');
 var boardRouter = require('./routes/board');
 var resourceRouter = require('./routes/resource');
 var selectorRouter = require('./routes/selector');
-var game = require("./models/game");
+
   
 var app = express();
 
@@ -94,6 +94,6 @@ async function recreateDB(){
     console.log('There was an error', e.message);
   });
   }
-  let reseed = true;
+  let reseed = false;
   if (reseed) { recreateDB();}
 module.exports = app;
