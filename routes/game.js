@@ -11,6 +11,6 @@ router.get('/create', game_controlers.game_create_Page);
 /* GET create update page */
 router.get('/update', game_controlers.game_update_Page);
 /* GET delete costume page */
-router.delete('/delete', game_controlers.game_delete_Page);
+router.get('/delete', game_controlers.game_delete_Page);
 
 module.exports = router;
