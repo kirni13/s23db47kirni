@@ -1,20 +1,20 @@
 extends layout
 
 block content
-    h1= title
-    - let results=[{gamename:"Cricket", playername: "Virat Kohli", score:100}, {gamename:"Tennis", playername: "Manika Batra", score:20},{gamename:"Badminton", playername: "Saina Nehwal", score:10}]
-    br
-    div.container-fliud
-        div.row
-            each item,ind in results 
-                div(class='col-sm-2' onclick=`buy(${ind})`) 
-                    p Game Name : #{item.gamename}
-                    p Player : #{item.playername}
-                    p Score : #{item.score}
-    br
-    
-    
-    script. 
-        function buy(i){
-            alert("You purchased item "+(i+1))
-        }
+  h1= title
+  - let items = results
+  div(claass="container-fluid mt-3")
+   div(class="row m-1")
+    each item,index in items
+     - let destination = `dispatch(\"/game/update?id=${item._id}\")`
+     div(class="col-sm-3 bg-info m-2 p-4" onclick=`buy(${index})`) #{item.gamename} - #{item.playername } - #{item.score}
+      button.btn( class="btn-primary ml-1", onclick= destination) Update
+  script.
+   function buy(itemNo)
+   {
+     alert(`You purchased Item ${itemNo+1}`)
+   }
+   function dispatch(path)
+   {
+     window.location.href=path
+   }
