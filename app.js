@@ -2,35 +2,38 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+
+
+
 var logger = require('morgan');
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-
 passport.use(new LocalStrategy(
-  function(username, password, done) {
-  Account.findOne({ username: username }, function (err, user) {
-  if (err) { return done(err); }
-  if (!user) {
-  return done(null, false, { message: 'Incorrect username.' });
-  }
-  if (!user.validPassword(password)) {
-  return done(null, false, { message: 'Incorrect password.' });
-  }
-  return done(null, user);
-  });
-  }
-));
-//Get the default connection
+  function (username, password, done) {
+    Account.findOne({ username: username }, function (err, user) {
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username.' });
+      }
+      if (!user.validPassword(password)) {
+        return done(null, false, { message: 'Incorrect password.' });
+      }
+      return done(null, user);
+    });
+  }))
+// Good code 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var gameRouter = require('./routes/game');
 var boardRouter = require('./routes/board');
-var resourceRouter = require('./routes/resource');
 var selectorRouter = require('./routes/selector');
+var game = require('./models/game');
+var resourceRouter = require("./routes/resource");
 
-  
+
 var app = express();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -41,56 +44,57 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+
+
 app.use(require('express-session')({
   secret: 'keyboard cat',
   resave: false,
   saveUninitialized: false
- }));
- app.use(passport.initialize());
- app.use(passport.session());
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 app.use(express.static(path.join(__dirname, 'public')));
-
-var mongoose = require('mongoose');
-
-require('dotenv').config();
-const connectionString = process.env.MONGO_CON
-mongoose.connect(connectionString,
-{useNewUrlParser: true,
-useUnifiedTopology: true});
-
-var db = mongoose.connection;
-
-//Bind connection to error event
-db.on('error', console.error.bind(console, 'MongoDB connectionerror:'));
-db.once("open", function(){
-console.log("Connection to DB succeeded")});
-
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/game', gameRouter);
-app.use('/Board', boardRouter);
-app.use('/Selector', selectorRouter);
+app.use('/board', boardRouter);
+app.use('/selector', selectorRouter);
 app.use('/resource', resourceRouter);
-let reseed = false;
-  if (reseed) { recreateDB();}
+
+
+// first code added
+require('dotenv').config();
+const connectionString =
+  process.env.MONGO_CON
+mongoose = require('mongoose');
+mongoose.connect(connectionString,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  });
+
 
 // passport config
 // Use the existing connection
 // The Account model
-var Account =require('./models/account');
+var Account = require('./models/account');
 passport.use(new LocalStrategy(Account.authenticate()));
 passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
 
+
+
+
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -100,36 +104,63 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-// We can seed the collection if needed on
-async function recreateDB(){
+//module.exports = app;
+
+// Second code added after connection
+//Get the default connection
+var db = mongoose.connection;
+//Bind connection to error event
+db.on('error', console.error.bind(console, 'MongoDB connectionerror:'));
+db.once("open", function () {
+  console.log("Connection to DB succeeded")
+});
+
+//Added thrid code after var game = require("./models/game");
+// We can seed the collection if needed on server start
+async function recreateDB() {
   // Delete everything
   await game.deleteMany();
-  let instance1 = new
-  game({gamename:"Cricket", playername: "Virat Kohli", score:100});
 
-  instance1.save().then( () => {
-    console.log('Everything went well');
-  }).catch( (e) => {
-    console.log('There was an error', e.message);
+  let instance1 = new game({gamename:"Cricket", playername: "Virat Kohli", score:100});
+  let instance2 = new game({
+    gamename:"Tennis", playername: "Manika Batra", score:20
+  });
+  let instance3 = new game({
+    gamename:"Badminton", playername: "Saina Nehwal", score:10
   });
 
-  let instance2 = new
-  game({gamename:"Tennis", playername: "Manika Batra", score:20});
 
-  instance2.save().then( () => {
-    console.log('Everything went well');
-  }).catch( (e) => {
-    console.log('There was an error', e.message);
-  });
+  instance1.save().then(() => {
 
-  let instance3 = new
-  game({gamename:"Badminton", playername: "Saina Nehwal", score:10});
+    console.log("Object 1 created")
 
-  instance3.save().then( () => {
-    console.log('Everything went well');
-  }).catch( (e) => {
-    console.log('There was an error', e.message);
-  });
-  }
-  
+  }).catch((err) => {
+
+    console.log(err);
+
+  })
+
+
+  instance2.save().then(() => {
+
+    console.log("Object 2 created")
+
+  }).catch((err) => {
+
+    console.log(err);
+
+  })
+  instance3.save().then(() => {
+
+    console.log("Object 3 created")
+
+  }).catch((err) => {
+
+    console.log(err);
+
+  })
+}
+let reseed = true;
+if (reseed) { recreateDB(); }
+
 module.exports = app;
